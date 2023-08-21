@@ -39,13 +39,7 @@ print(data.describe())
 
 
 
-# loading dataset 
-data = sns.load_dataset("iris") 
-  
-# draw lineplot 
-sns.lineplot(x="sepal_length", y="sepal_width", data=data) 
-  
-# setting the title using Matplotlib
-plt.title('Title using Matplotlib Function')
-
+# Create a histogram of the 'Age' column seaborn
+sns.pairplot(data, vars=['Age', 'Annual Salary'])
+plt.suptitle('Pair Plot of Age and Annual Salary', y=1.02)
 plt.show()
