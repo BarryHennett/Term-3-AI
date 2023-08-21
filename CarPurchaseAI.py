@@ -38,8 +38,7 @@ print("\nOverall statistics:")
 print(data.describe())
 
 
-
-# Create a histogram of the 'Age' column seaborn
-sns.pairplot(data, vars=['Age', 'Annual Salary'])
-plt.suptitle('Pair Plot of Age and Annual Salary', y=1.02)
+# Create a pairplot of the 'Age' column seaborn
+sns.pairplot(data, vars=['Age', 'Annual Salary', 'Credit Card Debt', 'Net Worth', 'Car Purchase Amount'])
+plt.suptitle('Pair Plot')
 plt.show()
