@@ -1,11 +1,30 @@
 import pandas as pd
 
-#importing data
+# Import the data
 dataset_path = "C:/Users/harra/Documents/Term-3-AI/Car_Purchasing_Data.xlsx"
-df = pd.read_excel(dataset_path)
+data = pd.read_excel(dataset_path)
 
-print("Head")
-print(df.head())
+# Display the first 5 rows of the dataset
+print("First 5 rows:")
+print(data.head())
 
-print("Tail")
-print(df.tail())
+# Display the last 5 rows of the dataset
+print("\nLast 5 rows:")
+print(data.tail())
+
+# Determine the shape of the dataset (rows, columns)
+rows, columns = data.shape
+print("\nNumber of rows:", rows)
+print("Number of columns:", columns)
+
+# Display the concise summary of the dataset
+print("\nConcise summary:")
+print(data.info())
+
+# Check for null values in the dataset
+print("\nNull values:")
+print(data.isnull().sum())
+
+# Get overall statistics about the dataset
+print("\nOverall statistics:")
+print(data.describe())
