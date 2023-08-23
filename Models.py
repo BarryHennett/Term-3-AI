@@ -93,5 +93,14 @@ fig.delaxes(axs[1, 2])
 plt.tight_layout()
 plt.subplots_adjust(top=0.9)
 
+
+print("Linear Regression MSE:", linear_mse)
+print("Ridge Regression MSE:", ridge_mse)
+print("Lasso Regression MSE:", lasso_mse)
+print("Multi-task Lasso Regression MSE:", multi_task_lasso_mse)
+print(f"Polynomial Regression (degree={degree}) MSE:", poly_mse)
+
+
 # Show all the plots
-plt.show()
+plt.show(),
+
