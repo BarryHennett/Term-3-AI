@@ -93,14 +93,28 @@ fig.delaxes(axs[1, 2])
 plt.tight_layout()
 plt.subplots_adjust(top=0.9)
 
-
 print("Linear Regression MSE:", linear_mse)
 print("Ridge Regression MSE:", ridge_mse)
 print("Lasso Regression MSE:", lasso_mse)
 print("Multi-task Lasso Regression MSE:", multi_task_lasso_mse)
 print(f"Polynomial Regression (degree={degree}) MSE:", poly_mse)
 
-
 # Show all the plots
 plt.show(),
 
+
+
+# Calculate MSE values for all regression models
+mse_values = [linear_mse, ridge_mse, lasso_mse, multi_task_lasso_mse, poly_mse]
+model_names = ['Linear', 'Ridge', 'Lasso', 'Multi-task Lasso', f'Polynomial (degree={degree})']
+
+# Bar graph for MSE comparison
+plt.figure(figsize=(10, 6))
+plt.bar(model_names, mse_values, color='skyblue')
+plt.title('Mean Squared Error Comparison')
+plt.xlabel('Regression Models')
+plt.ylabel('Mean Squared Error')
+plt.xticks(rotation=15)
+
+plt.tight_layout()
+plt.show()
