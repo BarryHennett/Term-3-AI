@@ -14,7 +14,7 @@ Annual Salary
 Credit Card Debt
 Net Worth
 Car Purchase Amount
-# Use the given dataset to perform the followings tasks:
+Use the given dataset to perform the followings tasks:
 Car_Purchasing_Data.csv
 
 Analyze the dataset by implementing the following operations using pandas:
