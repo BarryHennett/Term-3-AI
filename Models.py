@@ -52,6 +52,13 @@ poly_reg.fit(X_train_poly, y_train)
 poly_pred = poly_reg.predict(X_test_poly)
 poly_mse = mean_squared_error(y_test, poly_pred)
 
+# Calculate the MSE values
+mse_values = [linear_mse, ridge_mse, lasso_mse, multi_task_lasso_mse, poly_mse]
+model_names = ['Linear', 'Ridge', 'Lasso', 'Multi-task Lasso', f'Polynomial (degree={degree})']
+
+# Find the index of the best model (Lasso Regression)
+best_model_index = mse_values.index(min(mse_values))
+
 # Create subplots for each regression model
 fig, axs = plt.subplots(2, 3, figsize=(15, 10))
 fig.suptitle('Regression Model Comparisons', fontsize=16)
@@ -93,28 +100,27 @@ fig.delaxes(axs[1, 2])
 plt.tight_layout()
 plt.subplots_adjust(top=0.9)
 
+# Highlight the best model with a different color in the bar chart
+plt.figure(figsize=(10, 6))
+plt.bar(model_names, mse_values, color='blue')
+plt.xlabel('Model')
+plt.ylabel('Mean Squared Error (MSE)')
+plt.title('Comparison of Mean Squared Error (MSE) among Different Regression Models')
+plt.xticks(rotation=45, ha='right')
+
+# Highlight the best model with a different color
+plt.bar(model_names[best_model_index], mse_values[best_model_index], color='green')
+
 print("Linear Regression MSE:", linear_mse)
 print("Ridge Regression MSE:", ridge_mse)
 print("Lasso Regression MSE:", lasso_mse)
 print("Multi-task Lasso Regression MSE:", multi_task_lasso_mse)
 print(f"Polynomial Regression (degree={degree}) MSE:", poly_mse)
 
-# Show all the plots
-plt.show(),
-
-
-
-# Calculate MSE values for all regression models
-mse_values = [linear_mse, ridge_mse, lasso_mse, multi_task_lasso_mse, poly_mse]
-model_names = ['Linear', 'Ridge', 'Lasso', 'Multi-task Lasso', f'Polynomial (degree={degree})']
-
-# Bar graph for MSE comparison
-plt.figure(figsize=(10, 6))
-plt.bar(model_names, mse_values, color='skyblue')
-plt.title('Mean Squared Error Comparison')
-plt.xlabel('Regression Models')
-plt.ylabel('Mean Squared Error')
-plt.xticks(rotation=15)
-
 plt.tight_layout()
 plt.show()
+
+# Print the best model
+best_model_name = model_names[best_model_index]
+best_model_mse = mse_values[best_model_index]
+print(f"The best model is {best_model_name} with a MSE of {best_model_mse:.4f}")
