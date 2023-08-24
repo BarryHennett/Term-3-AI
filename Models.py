@@ -1,131 +1,157 @@
 import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression, Ridge, Lasso, MultiTaskLasso
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.metrics import mean_squared_error
+import seaborn as sns 
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.svm import SVR
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import GradientBoostingRegressor
+from xgboost import XGBRegressor
+from sklearn.metrics import mean_squared_error
 from joblib import dump
 from joblib import load
+import numpy as np
 
-# Load the dataset
-dataset_path = "C:/Users/harra/Desktop/Term-3-AI/Car_Purchasing_Data.xlsx"
-df = pd.read_excel(dataset_path)
+#Import the dataset
+data=pd.read_excel('C:/Users/harra/Desktop/Term-3-AI/Car_Purchasing_Data.xlsx')
 
-# Features: Gender, Age, Annual Salary
-X = df[['Gender', 'Age', 'Annual Salary']]
-y = df['Car Purchase Amount']
+#Display the first 5 rows of the dataset (head)
+#print("first 5 rows of dataset\n",data.head())
 
-# Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+#Display the last 5 rows of the dataset (tail)
+#print("last 5 rows of dataset\n",data.tail())
 
-# Linear Regression
-linear_reg = LinearRegression()
-linear_reg.fit(X_train, y_train)
-linear_pred = linear_reg.predict(X_test)
-linear_mse = mean_squared_error(y_test, linear_pred)
+#Determine the shape of the dataset (shape - Total number of rows and columns)
+#print("Number of rows and columns\n",data.shape)
+#print("Number of rows\n",data.shape[0])
+#print("Number of columns\n",data.shape[1])
 
-# Ridge Regression
-ridge_reg = Ridge(alpha=1.0)
-ridge_reg.fit(X_train, y_train)
-ridge_pred = ridge_reg.predict(X_test)  
-ridge_mse = mean_squared_error(y_test, ridge_pred)
+#Display the concise summary of the dataset (info)
+#print(data.info())
 
-# Lasso Regression
-lasso_reg = Lasso(alpha=1.0)
-lasso_reg.fit(X_train, y_train)
-lasso_pred = lasso_reg.predict(X_test)
-lasso_mse = mean_squared_error(y_test, lasso_pred)
+#Check the null values in dataset (isnull)
+#print(data.isnull())
+# OR
+#print(data.isnull().sum())
 
-# Multi-task Lasso Regression
-multi_task_lasso_reg = MultiTaskLasso(alpha=1.0)
-multi_task_lasso_reg.fit(X_train, np.column_stack((y_train, y_train)))  # Duplicate y_train for demonstration
-multi_task_lasso_pred = multi_task_lasso_reg.predict(X_test)
-multi_task_lasso_mse = mean_squared_error(y_test, multi_task_lasso_pred[:, 0])  # Use only one of the tasks
+#Identify the library to plot the graph to understand the relations among the various columns
+#to select the independent variables, target variables and irrelevant features.
+#sns.pairplot(data)
+#plt.show()
 
-# Polynomial Regression
-degree = 2  # Set the degree of the polynomial
-poly = PolynomialFeatures(degree=degree)
-X_train_poly = poly.fit_transform(X_train)
-X_test_poly = poly.transform(X_test)
 
-poly_reg = LinearRegression()
-poly_reg.fit(X_train_poly, y_train)
-poly_pred = poly_reg.predict(X_test_poly)
-poly_mse = mean_squared_error(y_test, poly_pred)
+#print(data.columns)
+#Create the input dataset from the original dataset by dropping the irrelevant features
+# store input variables in X
+X= data.drop(['Customer Name', 'Customer e-mail', 'Country', 'Car Purchase Amount'],axis=1)
+#print(X)
 
-# Calculate the MSE values
-mse_values = [linear_mse, ridge_mse, lasso_mse, multi_task_lasso_mse, poly_mse]
-model_names = ['Linear', 'Ridge', 'Lasso', 'Multi-task Lasso', f'Polynomial (degree={degree})']
+#Create the output dataset from the original dataset.
+# store output variable in Y
+Y= data['Car Purchase Amount']
+#print(Y)
 
-# Find the index of the best model (Lasso Regression)
-best_model_index = mse_values.index(min(mse_values))
+#Transform the input dataset into a percentage based weighted value between 0 and 1.
+sc= MinMaxScaler()
+X_scaled=sc.fit_transform(X)
+#print(X_scaled)
 
-# Create subplots for each regression model
-fig, axs = plt.subplots(2, 3, figsize=(15, 10))
-fig.suptitle('Regression Model Comparisons', fontsize=16)
+#Transform the output dataset into a percentage based weighted value between 0 and 1
+sc1= MinMaxScaler()
+y_reshape= Y.values.reshape(-1,1)
+y_scaled=sc1.fit_transform(y_reshape)
+#print(Y_scaled)
 
-# Linear Regression Plot
-axs[0, 0].scatter(y_test, linear_pred)
-axs[0, 0].set_title('Linear Regression')
-axs[0, 0].set_xlabel('True Values')
-axs[0, 0].set_ylabel('Predicted Values')
+# Print a few rows of the scaled input dataset (X)
+#print("Scaled Input (X):")
+#print(X_scaled[:5])
 
-# Ridge Regression Plot
-axs[0, 1].scatter(y_test, ridge_pred)
-axs[0, 1].set_title('Ridge Regression')
-axs[0, 1].set_xlabel('True Values')
-axs[0, 1].set_ylabel('Predicted Values')
+# Print a few rows of the scaled output dataset (y)
+#print("Scaled Output (y):")
+#print(y_scaled[:5])
 
-# Lasso Regression Plot
-axs[0, 2].scatter(y_test, lasso_pred)
-axs[0, 2].set_title('Lasso Regression')
-axs[0, 2].set_xlabel('True Values')
-axs[0, 2].set_ylabel('Predicted Values')
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_scaled, test_size=0.2, random_state=42)
 
-# Multi-task Lasso Regression Plot
-axs[1, 0].scatter(y_test, multi_task_lasso_pred[:, 0])
-axs[1, 0].set_title('Multi-task Lasso Regression')
-axs[1, 0].set_xlabel('True Values')
-axs[1, 0].set_ylabel('Predicted Values')
+#print the shape of the test and train data
+# print("X_train shape:", X_train.shape)
+# print("X_test shape:", X_test.shape)
+# print("y_train shape:", y_train.shape)
+# print("y_test shape:", y_test.shape)
 
-# Polynomial Regression Plot
-axs[1, 1].scatter(y_test, poly_pred)
-axs[1, 1].set_title(f'Polynomial Regression (degree={degree})')
-axs[1, 1].set_xlabel('True Values')
-axs[1, 1].set_ylabel('Predicted Values')
+#print the first few rows
+#head method can also be used but it only works with pandas dataframe but this can be work with numpy arrays 
+# print("First 5 rows of X_train:\n", X_train[:5])
+# print("First 5 rows of X_test:\n", X_test[:5])
+# print("First 5 rows of y_train:\n", y_train[:5])
+# print("First 5 rows of y_test:\n", y_test[:5])
 
-# Remove empty subplot
-fig.delaxes(axs[1, 2])
+#Import and Initialize the Models
+lr = LinearRegression() 
+svm = SVR() 
+rf = RandomForestRegressor() 
+gbr = GradientBoostingRegressor() 
+xg =  XGBRegressor() 
 
-# Adjust layout for better spacing
+#train the models using training sets
+lr.fit(X_train,y_train)
+svm.fit(X_train,y_train)
+rf.fit(X_train,y_train)
+gbr.fit(X_train,y_train) 
+xg.fit(X_train,y_train)
+
+#Prediction on the Validation/Test Data
+lr_preds = lr.predict(X_test)
+svm_preds = svm.predict(X_test)
+rf_preds = rf.predict(X_test)
+gbr_preds = gbr.predict(X_test)
+xg_preds = xg.predict(X_test)
+
+#Evaluate model performance
+#RMSE is a measure of the differences between the predicted values by the model and the actual values
+lr_rmse = mean_squared_error(y_test, lr_preds, squared=False)
+svm_rmse = mean_squared_error(y_test, svm_preds, squared=False)
+rf_rmse = mean_squared_error(y_test, rf_preds, squared=False)
+gbr_rmse = mean_squared_error(y_test, gbr_preds, squared=False)
+xg_rmse = mean_squared_error(y_test, xg_preds, squared=False)
+
+#Display the evaluation results
+# print(f"Linear Regression RMSE: {lr_rmse}")
+# print(f"Support Vector Machine RMSE: {svm_rmse}")
+# print(f"Random Forest RMSE: {rf_rmse}")
+# print(f"Gradient Boosting Regressor RMSE: {gbr_rmse}")
+# print(f"XGBRegressor RMSE: {xg_rmse}")
+
+#choose the best model
+model_objects = [lr, svm, rf, gbr, xg]
+rmse_values = [lr_rmse, svm_rmse, rf_rmse, gbr_rmse, xg_rmse]
+
+best_model_index = rmse_values.index(min(rmse_values))
+best_model_object = model_objects[best_model_index]
+
+#print(f"The best model is {models[best_model_index]} with RMSE: {rmse_values[best_model_index]}")
+
+#visualize the models results
+# Create a bar chart
+models = ['Linear Regression', 'Support Vector Machine', 'Random Forest', 'Gradient Boosting Regressor', 'XGBRegressor']
+plt.figure(figsize=(10,7))
+bars = plt.bar(models, rmse_values, color=['blue', 'green', 'red', 'purple', 'orange'])
+
+# Add RMSE values on top of each bar
+for bar in bars:
+    yval = bar.get_height()
+    plt.text(bar.get_x() + bar.get_width()/2, yval + 0.00001, round(yval, 5), ha='center', va='bottom', fontsize=10)
+
+plt.xlabel('Models')
+plt.ylabel('Root Mean Squared Error (RMSE)')
+plt.title('Model RMSE Comparison')
+plt.xticks(rotation=45)  # Rotate model names for better visibility
 plt.tight_layout()
-plt.subplots_adjust(top=0.9)
 
-# Highlight the best model with a different color in the bar chart
-
-plt.figure(figsize=(10, 6))
-plt.bar(model_names, mse_values, color='blue')
-plt.xlabel('Model')
-plt.ylabel('Mean Squared Error (MSE)')
-plt.title('Comparison of Mean Squared Error (MSE) among Different Regression Models')
-plt.xticks(rotation=45, ha='right')
-
-# Highlight the best model with a different color
-plt.bar(model_names[best_model_index], mse_values[best_model_index], color='green')
-
-print("Linear Regression MSE:", linear_mse)
-print("Ridge Regression MSE:", ridge_mse)
-print("Lasso Regression MSE:", lasso_mse)
-print("Multi-task Lasso Regression MSE:", multi_task_lasso_mse)
-print(f"Polynomial Regression (degree={degree}) MSE:", poly_mse)
-
-plt.tight_layout()
+# Display the chart
 plt.show()
 
-# Print the best model
-best_model_name = model_names[best_model_index]
-best_model_mse = mse_values[best_model_index]
-print("")
-print("")
-print(f"The best model is {best_model_name} with a MSE of {best_model_mse:.4f}")
+#Retrain the model on entire dataset
+lr_final = LinearRegression()
+lr_final.fit(X_scaled, y_scaled)
