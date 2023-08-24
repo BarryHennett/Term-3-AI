@@ -123,4 +123,6 @@ plt.show()
 # Print the best model
 best_model_name = model_names[best_model_index]
 best_model_mse = mse_values[best_model_index]
+print("")
+print("")
 print(f"The best model is {best_model_name} with a MSE of {best_model_mse:.4f}")
