@@ -5,6 +5,8 @@ from sklearn.linear_model import LinearRegression, Ridge, Lasso, MultiTaskLasso
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
+from joblib import dump
+from joblib import load
 
 # Load the dataset
 dataset_path = "C:/Users/harra/Desktop/Term-3-AI/Car_Purchasing_Data.xlsx"
@@ -101,6 +103,7 @@ plt.tight_layout()
 plt.subplots_adjust(top=0.9)
 
 # Highlight the best model with a different color in the bar chart
+
 plt.figure(figsize=(10, 6))
 plt.bar(model_names, mse_values, color='blue')
 plt.xlabel('Model')
