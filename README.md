@@ -95,7 +95,7 @@ Plot the bar chart to visualize the best model among all
 
 Retrain the model on entire dataset
 
-$ Day 5
+# Day 5
 
 Train a model to predict the annual salary of a person based on the information given in above dataset.
 
