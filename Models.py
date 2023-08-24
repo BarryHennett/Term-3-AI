@@ -9,6 +9,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import GradientBoostingRegressor
 from xgboost import XGBRegressor
 from sklearn.metrics import mean_squared_error
+import joblib
 from joblib import dump
 from joblib import load
 import numpy as np
@@ -155,3 +156,31 @@ plt.show()
 #Retrain the model on entire dataset
 lr_final = LinearRegression()
 lr_final.fit(X_scaled, y_scaled)
+
+
+#save the best model
+model_filename = "best_regression_model.pkl"
+joblib.dump(lr_final, model_filename)
+print(f"Best model saved as '{model_filename}'")
+
+#load the model
+loaded_model = joblib.load("best_regression_model.pkl")
+
+
+# Create a new test dataset with the same features as the original dataset
+new_test_data = pd.DataFrame({
+    'Gender': [0, 1, 0, 1, 0, 1, 0, 1, 0, 1],  # Note: Use numeric values
+    'Age': [30, 25, 40, 28, 35, 22, 45, 29, 33, 27],
+    'Annual Salary': [70000, 60000, 80000, 65000, 75000, 55000, 85000, 62000, 72000, 59000],
+    'Credit Score': [650, 700, 720, 675, 800, 650, 750, 780, 760, 680],  # Add new feature
+    'Net Worth': [500000, 600000, 750000, 550000, 900000, 450000, 800000, 950000, 850000, 550000]  # Add new feature
+})    
+
+
+# Use the loaded model to make predictions on the new test data
+predictions = loaded_model.predict(new_test_data)
+
+# Print the first 10 predicted car purchase amounts
+print("The First 10 Predicted Car Purchase Amounts:")
+for prediction in predictions[:10]:
+    print(prediction) 
