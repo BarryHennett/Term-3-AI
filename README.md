@@ -78,6 +78,17 @@ Evaluate model performance
 
 Display the evaluation results
 
+# Day 4
+Save the model
+
+Load the model
+
+Create a new test set
+
+Make sure the test set is transformed
+
+Predict the outcome
+
 Choose the best model
 
 Plot the bar chart to visualize the best model among all
