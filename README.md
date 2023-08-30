@@ -1,7 +1,7 @@
 # Term-3-AI
 
 
-# Day 1
+# Week 6 Day 1
 Develop a machine learning model to predict the total dollar amount that customers 
 are willing to pay while purchasing a car given the following attributes
 
@@ -45,7 +45,7 @@ Get overall statistics about dataset (describe)
 
 Identify the library to plot the graph to understand the relations among the various columns to select the independent variables (Input), target variables (output) and irrelevant features.
 
-# Day2
+# Week 6 Day 2
 
 Create the input dataset from the original dataset by dropping the irrelevant features
 
@@ -63,7 +63,7 @@ Print the shape of train and test set data set
 
 Print the first few rows from the train and test data set
 
-# Day 3
+# Week 6 Day 3
 Work with Models
 
 Identify the type of output for the output variable (regression or classification) and select the required (Regression) models
@@ -78,7 +78,7 @@ Evaluate model performance
 
 Display the evaluation results
 
-# Day 4
+# Week 6 Day 4
 Save the model
 
 Load the model
@@ -95,25 +95,45 @@ Plot the bar chart to visualize the best model among all
 
 Retrain the model on entire dataset
 
-# Day 5
+# Week 6 Day 5
 
 Train a model to predict the annual salary of a person based on the information given in above dataset.
 
 Rewrite the code for car purchase amount prediction using methods. You are expected to write minimum of these methods given below:
 
-load_data
+to load the data
 
-preprocess_data
+to preprocess the data
 
-split_data
+split data
 
-train_models
+train models
 
-evaluate_models
+evaluate models
 
-plot_model_performance
+plot the model performance
 
-save_best_model
+save the best model
 
-predict_new_data
+predict the outcome with new data
 
+# Week 7 Day 1
+
+Implement factory design pattern in your code which should return a model based on a given input. This should make it easier to add new models in the future without modifying existing code.
+
+
+# Week 7 Day 2
+
+Write the test cases using unit testing for the above written code to ensure smooth working of the application. 
+
+Test case to ensure the correct loading of data
+
+Test case to ensure the correct shape of data
+
+Test case to ensure the correct columns for Input
+
+Test case to ensure the correct column for output
+
+Test case to ensure the correct range of data
+
+Test case to ensure the correct splitting of data
