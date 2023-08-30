@@ -4,7 +4,7 @@ import numpy as np
 
 #Test case to ensure the correct loading of data
 def test_load_data():
-    data = load_data('Car_Purchasing_Data.xlsx')
+    data = load_data('C:/Users/harra/Desktop/Term-3-AI/tests/Car_Purchasing_Data.xlsx')
     assert isinstance(data, pd.DataFrame), "Loaded data should be a DataFrame."
 
     expected_columns = ['Customer Name', 'Customer e-mail', 'Country', 'Gender', 
@@ -15,7 +15,7 @@ def test_load_data():
 
 #Test case to ensure the correct shape of data
 def test_shape_of_data():
-    data = load_data('Car_Purchasing_Data.xlsx')
+    data = load_data('C:/Users/harra/Desktop/Term-3-AI/tests/Car_Purchasing_Data.xlsx')
     X_scaled, y_scaled, _, _ = preprocess_data(data)
     
     assert X_scaled.shape[1] == 5, "Expected 5 features in the X data after preprocessing."
@@ -23,7 +23,7 @@ def test_shape_of_data():
 
 #Test case to ensure the correct columns for Input
 def test_columns_X():
-    data = load_data('Car_Purchasing_Data.xlsx')
+    data = load_data('C:/Users/harra/Desktop/Term-3-AI/tests/Car_Purchasing_Data.xlsx')
     X, _, _, _ = preprocess_data(data)
     input_columns = ['Gender', 'Age', 'Annual Salary', 'Credit Card Debt', 'Net Worth']
     # Convert the NumPy array to a DataFrame
@@ -38,7 +38,7 @@ def test_columns_X():
 
 #Test case to ensure the correct column for output
 def test_columns_Y():
-    data = load_data('Car_Purchasing_Data.xlsx')
+    data = load_data('C:/Users/harra/Desktop/Term-3-AI/tests/Car_Purchasing_Data.xlsx')
     _, Y, _, _ = preprocess_data(data)
     # Convert the NumPy array to a DataFrame
     Y_df = pd.DataFrame(Y, columns=['Car Purchase Amount'])
@@ -49,7 +49,7 @@ def test_columns_Y():
 
 #Test case to ensure the correct range of data
 def test_data_range():
-    data = load_data('Car_Purchasing_Data.xlsx')
+    data = load_data('C:/Users/harra/Desktop/Term-3-AI/tests/Car_Purchasing_Data.xlsx')
     X_scaled, y_scaled, _, _ = preprocess_data(data)
     
     assert 0 <= np.min(X_scaled) <= 1, "X data should be scaled between 0 and 1."
@@ -59,7 +59,7 @@ def test_data_range():
 
 #Test case to ensure the correct splitting of data
 def test_data_split():
-    data = load_data('Car_Purchasing_Data.xlsx')
+    data = load_data('C:/Users/harra/Desktop/Term-3-AI/tests/Car_Purchasing_Data.xlsx')
     X, Y, _, _ = preprocess_data(data)
     X_train, X_test, y_train, y_test = split_data(X, Y)
     # Check proportions for train-test split
