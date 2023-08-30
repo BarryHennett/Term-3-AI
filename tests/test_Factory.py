@@ -1,41 +1,69 @@
-import unittest
+from FactorySalary import load_data, preprocess_data, split_data
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.svm import SVR
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.ensemble import GradientBoostingRegressor
-from xgboost import XGBRegressor
-from sklearn.metrics import mean_squared_error
-from joblib import dump, load
+import numpy as np
 
-# Import the functions from your code
-from FactorySalary import load_data, preprocess_data, split_data, train_models, evaluate_models, plot_model_performance, save_best_model, predict_new_data
+#Test case to ensure the correct loading of data
+def test_load_data():
+    data = load_data('Car_Purchasing_Data.xlsx')
+    assert isinstance(data, pd.DataFrame), "Loaded data should be a DataFrame."
 
-class TestCarPurchasePrediction(unittest.TestCase):
+    expected_columns = ['Customer Name', 'Customer e-mail', 'Country', 'Gender', 
+                        'Annual Salary', 'Credit Card Debt', 'Net Worth', 'Car Purchase Amount']
 
-    @classmethod
-    def setUpClass(cls):
-        # Load the dataset
-        cls.data = load_data('C:/Users/harra/Desktop/Term-3-AI/Car_Purchasing_Data.xlsx')
+    for col in expected_columns:
+        assert col in data.columns, f"Expected column {col} not found in loaded data."
 
-    def test_load_data(self):
-        self.assertIsNotNone(self.data, "Dataset is not loaded.")
-
-    def test_split_data(self):
-        X_scaled, y_scaled, sc, sc1 = preprocess_data(self.data)
-        X_train, X_test, y_train, y_test = split_data(X_scaled, y_scaled)
-        
-        self.assertEqual(X_train.shape[0] + X_test.shape[0], self.data.shape[0], "Data split is incorrect.")
-		
-    def test_preprocess_data(self):
-        X_scaled, y_scaled, sc, sc1 = preprocess_data(self.data)
+#Test case to ensure the correct shape of data
+def test_shape_of_data():
+    data = load_data('Car_Purchasing_Data.xlsx')
+    X_scaled, y_scaled, _, _ = preprocess_data(data)
     
-        self.assertIsNotNone(X_scaled)
-        self.assertIsNotNone(y_scaled)
-        self.assertIsNotNone(sc)
-        self.assertIsNotNone(sc1)
+    assert X_scaled.shape[1] == 5, "Expected 5 features in the X data after preprocessing."
+    assert y_scaled.shape[1] == 1, "Expected Y data to have a single column."
 
-if __name__ == '__main__':
-    unittest.main()
+#Test case to ensure the correct columns for Input
+def test_columns_X():
+    data = load_data('Car_Purchasing_Data.xlsx')
+    X, _, _, _ = preprocess_data(data)
+    input_columns = ['Gender', 'Age', 'Annual Salary', 'Credit Card Debt', 'Net Worth']
+    # Convert the NumPy array to a DataFrame
+    X_df = pd.DataFrame(X, columns=input_columns)
+    # Check if X_df is a DataFrame
+    assert isinstance(X_df, pd.DataFrame)
+    # Check that the columns have been dropped for X
+    assert "Customer Name" not in X_df.columns
+    assert "Customer e-mail" not in X_df.columns
+    assert "Country" not in X_df.columns
+    assert "Car Purchase Amount" not in X_df.columns
+
+#Test case to ensure the correct column for output
+def test_columns_Y():
+    data = load_data('Car_Purchasing_Data.xlsx')
+    _, Y, _, _ = preprocess_data(data)
+    # Convert the NumPy array to a DataFrame
+    Y_df = pd.DataFrame(Y, columns=['Car Purchase Amount'])
+    
+    # Check if Y_df is a DataFrame and has the correct column name
+    assert isinstance(Y_df, pd.DataFrame)
+    assert Y_df.columns == 'Car Purchase Amount'
+
+#Test case to ensure the correct range of data
+def test_data_range():
+    data = load_data('Car_Purchasing_Data.xlsx')
+    X_scaled, y_scaled, _, _ = preprocess_data(data)
+    
+    assert 0 <= np.min(X_scaled) <= 1, "X data should be scaled between 0 and 1."
+    assert 0 <= np.min(y_scaled) <= 1, "Y data should be scaled between 0 and 1."
+    assert 0 <= np.max(X_scaled) <= 1, "X data should be scaled between 0 and 1."
+    assert 0 <= np.max(y_scaled) <= 1, "Y data should be scaled between 0 and 1."
+
+#Test case to ensure the correct splitting of data
+def test_data_split():
+    data = load_data('Car_Purchasing_Data.xlsx')
+    X, Y, _, _ = preprocess_data(data)
+    X_train, X_test, y_train, y_test = split_data(X, Y)
+    # Check proportions for train-test split
+    assert X_train.shape[0] / X.shape[0] == 0.8
+    assert X_test.shape[0] / X.shape[0] == 0.2
+    assert y_train.shape[0] / Y.shape[0] == 0.8
+    assert y_test.shape[0] / Y.shape[0] == 0.2
