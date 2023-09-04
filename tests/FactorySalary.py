@@ -107,7 +107,7 @@ def predict_new_data(loaded_model, sc, sc1):
     print("Predicted output: ", sc1.inverse_transform(pred_value))
 
 if __name__ == "__main__":
-    data = load_data('C:/Users/harra/Desktop/Term-3-AI/Car_Purchasing_Data.xlsx')
+    data = load_data('C:/Users/harra/Documents/Term-3-AI/Car_Purchasing_Data.xlsx')
     X_scaled, y_scaled, sc, sc1 = preprocess_data(data)
     X_train, X_test, y_train, y_test = split_data(X_scaled, y_scaled)
     models = train_models(X_train, y_train)
