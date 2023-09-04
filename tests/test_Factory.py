@@ -1,4 +1,4 @@
-from FactorySalary import load_data, preprocess_data, split_data
+from FinalCode import load_data, preprocess_data, split_data
 import pandas as pd
 import numpy as np
 

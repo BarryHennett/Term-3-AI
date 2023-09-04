@@ -64,12 +64,12 @@ def train_models(X_train, y_train):
         
     return models
 
-def evaluate_models(models, X_test, y_test):
+def evaluate_models(models, Test_X, Test_Y):
     rmse_values = {}
     
     for name, model in models.items():
-        preds = model.predict(X_test)
-        rmse_values[name] = mean_squared_error(y_test, preds, squared=False)
+        preds = model.predict(Test_X)
+        rmse_values[name] = mean_squared_error(Test_Y, preds, squared=False)
         
     return rmse_values
 
@@ -96,8 +96,8 @@ def save_best_model(models, rmse_values):
     dump(best_model, "car_model.joblib")
 
 def predict_new_data(loaded_model, sc, sc1):
-    X_test1 = sc.transform(np.array([[0,42,62812.09301,11609.38091,238961.2505]]))
-    pred_value = loaded_model.predict(X_test1)
+    Test_X1 = sc.transform(np.array([[0,42,62812.09301,11609.38091,238961.2505]]))
+    pred_value = loaded_model.predict(Test_X1)
     print(pred_value)
     
     # Ensure pred_value is a 2D array before inverse transform
@@ -109,9 +109,9 @@ def predict_new_data(loaded_model, sc, sc1):
 if __name__ == "__main__":
     data = load_data('C:/Users/harra/Documents/Term-3-AI/Car_Purchasing_Data.xlsx')
     X_scaled, y_scaled, sc, sc1 = preprocess_data(data)
-    X_train, X_test, y_train, y_test = split_data(X_scaled, y_scaled)
+    X_train, Test_X, y_train, Test_Y = split_data(X_scaled, y_scaled)
     models = train_models(X_train, y_train)
-    rmse_values = evaluate_models(models, X_test, y_test)
+    rmse_values = evaluate_models(models, Test_X, Test_Y)
     plot_model_performance(rmse_values)
     save_best_model(models, rmse_values)
     loaded_model = load("car_model.joblib")
