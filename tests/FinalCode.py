@@ -32,9 +32,9 @@ def load_data(NameOFile):
     return pd.read_excel(NameOFile)
 
 def preprocess_data(data):
-# Check for missing values
+# Checking for any missing values
     if data.isnull().any().any():
-        raise ValueError("The data contains missing values. Please ensure the data is cleaned before processing.")
+        raise ValueError("The data contains missing values! Please check the data is cleaned before processing.")
 
     X = data.drop(['Customer Name', 'Customer e-mail', 'Country', 'Car Purchase Amount'], axis=1)
     Y = data['Car Purchase Amount']
@@ -73,12 +73,12 @@ def train_models(TrainOX, TrainOY):
     return models
 
 
-def evaluate_models(models, X_test, y_test):
+def evaluate_models(models, TestOX, TestOY):
     rmse_values = {}
     
     for name, model in models.items():
-        preds = model.predict(X_test)
-        rmse_values[name] = mean_squared_error(y_test, preds, squared=False)
+        preds = model.predict(TestOX)
+        rmse_values[name] = mean_squared_error(TestOY, preds, squared=False)
         
     return rmse_values
 
@@ -105,8 +105,8 @@ def save_best_model(models, rmse_values):
     dump(best_model, "car_model.joblib")
 
 def predict_new_data(loaded_model, sc, sc1):
-    X_test1 = sc.transform(np.array([[0,42,62812.09301,11609.38091,238961.2505]]))
-    pred_value = loaded_model.predict(X_test1)
+    TestOX1 = sc.transform(np.array([[0,42,62812.09301,11609.38091,238961.2505]]))
+    pred_value = loaded_model.predict(TestOX1)
     print(pred_value)
     
     # Ensure pred_value is a 2D array before inverse transform
@@ -119,12 +119,12 @@ if __name__ == "__main__":
     try: #add try except to handle missing value error
         data = load_data('Car_Purchasing_Data.xlsx')
         ScaledOX, ScaledOY, sc, sc1 = preprocess_data(data)
-        TrainOX, X_test, TrainOY, y_test = split_data(ScaledOX, ScaledOY)
+        TrainOX, TestOX, TrainOY, TestOY = split_data(ScaledOX, ScaledOY)
         models = train_models(TrainOX, TrainOY)
-        rmse_values = evaluate_models(models, X_test, y_test)
+        rmse_values = evaluate_models(models, TestOX, TestOY)
         plot_model_performance(rmse_values)
         save_best_model(models, rmse_values)
         loaded_model = load("car_model.joblib")
         predict_new_data(loaded_model, sc, sc1)
-    except ValueError as ve:
-        print(f"Error: {ve}")
+    except ValueError as ValError:
+        print(f"Error: {ValError}")
