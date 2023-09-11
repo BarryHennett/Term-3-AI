@@ -112,7 +112,7 @@ def Best_Model_Save(models, rmse_values):
     dump(best_model, "NetWorth.joblib")
     
 def New_Data_Prediction(loaded_model, sc, sc1):
-    TestOX1 = sc.transform(np.array([[0,42,62812.09301,11609.38091,238961.2505]]))
+    TestOX1 = sc.transform(np.array([[52,35069.41886,1851.979839,31978.9799,4897.702477,16393.51771,46929.38914,23370.35779,18246.00139]]))
     pred_value = loaded_model.predict(TestOX1)
     print(pred_value)
     
